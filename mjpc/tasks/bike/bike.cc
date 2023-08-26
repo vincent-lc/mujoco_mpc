@@ -33,15 +33,23 @@ std::string Bike::Name() const { return "Bike"; }
 // -------------------------------------------------------------
 void Bike::ResidualFn::Residual(const mjModel* model, const mjData* data,
                        double* residual) const {
-  // ---------- Residual (0-4) ----------
+  // ---------- Residual (0-2) ----------
   // controls
   mju_copy(residual, data->ctrl, model->nu);
 
-  // ---------- Residuals (5-6) ----------
+  // ---------- Residuals (3-4) ----------
   // nose to target XY displacement
   double* target = SensorByName(model, data, "target");
   double* nose = SensorByName(model, data, "nose");
   mju_sub(residual + model->nu, nose, target, 2);
+  
+  // ---------- Residuals (5) ----------
+  // handle to reference height
+  double* handle = SensorByName(model, data, "handle");
+  double height_handle = handle[2];
+  // std::cout << height_handle << std::endl;
+  double height_reference = 0.6;
+  residual[model->nu + 2] = height_handle - height_reference;
 }
 
 // -------- Transition for bike task --------
@@ -53,7 +61,7 @@ void Bike::TransitionLocked(mjModel* model, mjData* data) {
   double* nose = SensorByName(model, data, "nose");
   double nose_to_target[2];
   mju_sub(nose_to_target, target, nose, 2);
-  if (mju_norm(nose_to_target, 2) < 0.04) {
+  if (mju_norm(nose_to_target, 2) < 0.08) {
     absl::BitGen gen_;
     data->mocap_pos[0] = absl::Uniform<double>(gen_, -.8, .8);
     data->mocap_pos[1] = absl::Uniform<double>(gen_, -.8, .8);

@@ -29,6 +29,7 @@
     <!-- cost -->
     <user name="Control" dim="2" user="0 0.05 0 1" />
     <user name="Distance" dim="2" user="2 10 0 10 0.04" />
+    <user name="Stand" dim="1" user="2 10 0 10 0.04" />
 
     <!-- trace -->
     <framepos name="trace0" objtype="geom" objname="nose"/>
@@ -36,5 +37,6 @@
     <!-- residual -->
     <framepos name="nose" objtype="geom" objname="nose"/>
     <framepos name="target" objtype="body" objname="target"/>
+    <framepos name="handle" objtype="geom" objname="top_handle"/>
   </sensor>
 </mujoco>

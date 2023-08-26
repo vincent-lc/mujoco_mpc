@@ -21,42 +21,38 @@
     <general gainprm="2e-3" ctrllimited="true" ctrlrange="-1 1" dyntype="filter" dynprm="0.6"/>
   </default>
 
-  <worldbody>
-	<body name='ground' pos='0 0 0'>
-    <geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
-	</body>
-
-		<body name='torso' pos='0 0 2.25'>
-			<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
-			<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
-      <geom name="nose" type="sphere" pos="0 -.06 0" size=".004" mass="0" material="effector" euler="180 0 0"/>
-			<body pos='-.3 0 0' name='l_wheel'>
-				<joint name='fff' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
-				<geom name='b_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
-				<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
-			</body>
-
-			<body pos='.55 0 0' name='handle'>
-				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-15 15' stiffness='0' armature='0' damping='0.1'/>
-				<geom type='capsule' size='.04 .2' pos='0 0 0.2'/>
-				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
-
-				<body pos='0 0 0' name='f_wheel'>
-					<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
-					<geom name='f_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
-					<geom name='f_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
-				</body>
-
-			</body>
-
+	<worldbody>
+		<body name='ground' pos='0 0 0'>
+		<geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
 		</body>
 
+			<body name='torso' pos='0 0 2.25'>
+				<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
+				<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
+				<geom name="nose" type="sphere" pos="0 -.06 0" size=".004" mass="0" material="effector" euler="180 0 0"/>
+				<body pos='-.3 0 0' name='l_wheel'>
+					<joint name='b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+					<geom name='b_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
+					<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+				</body>
 
-  </worldbody>
+				<body pos='.55 0 0' name='handle'>
+					<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-15 15' stiffness='0' armature='0' damping='0.1'/>
+					<geom name="bottom_handle" type='capsule' size='.04 .2' pos='0 0 0.2'/>
+					<geom name="top_handle" type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
 
-  <actuator>
-    <motor name="0" joint="joint_0" gear="25"/>
-    <motor name="1" joint="joint_1" gear="25"/>
+					<body pos='0 0 0' name='f_wheel'>
+						<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+						<geom name='f_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
+						<geom name='f_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+					</body>
+				</body>
+			</body>
+	</worldbody>
+
+	<actuator>
+		<motor name="0" joint="joint_0" gear="25"/>
+		<motor name="1" joint="joint_1" gear="25"/>
 	</actuator>
 
 </mujoco>
