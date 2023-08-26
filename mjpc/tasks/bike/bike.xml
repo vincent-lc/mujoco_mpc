@@ -68,6 +68,39 @@
         </body>
       </body>
     </body>
+
+		<body name='torso' pos='0 0 2.25'>
+			<joint name='root' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
+			<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
+			<site name="root" type='sphere' size=".05" pos="0 0 0"/>
+			<body pos='-.3 0 0' name='l_wheel'>
+				<joint name='b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+				<geom name='b_wheel' type='cylinder' fromto='0 -.01 0    0 0.01 0'  size='0.20' condim='6'/>
+				<geom name='b_wheel0' type='cylinder' fromto='0 -.011 0    0 0.011 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+				<geom name='b_decoration1' type='box'   size='0.15 0.012 0.02' contype='0' conaffinity='0' density='0'/>
+				<geom name='b_decoration2' type='box'   size='0.02 0.012 0.15' contype='0' conaffinity='0' density='0'/>
+			</body>
+
+			<body pos='.55 0 0' name='handle'>
+				<light name='headlight' directional='false' diffuse='20 20 20' pos='0 0 .2' dir='2 0 -1' cutoff='60'/>
+
+				<joint name='handle' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-.5 .5' stiffness='0' armature='0' damping='0.1'/>
+				<geom type='capsule' size='.04 .2' pos='0 0 0.2'/>
+				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='1.57 0 0'/>
+
+				<body pos='0 0 0' name='f_wheel'>
+					<joint name='f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+					<geom name='f_wheel' type='cylinder' fromto='0 -.01 0    0 0.01 0'  size='0.20' condim='6'/>
+					<geom name='f_wheel0' type='cylinder' fromto='0 -.011 0    0 0.011 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+					<geom name='f_decoration1' type='box'   size='0.15 0.012 0.02' contype='0' conaffinity='0' density='0'/>
+					<geom name='f_decoration2' type='box'   size='0.02 0.012 0.15' contype='0' conaffinity='0' density='0'/>
+				</body>
+
+			</body>
+
+		</body>
+
+
   </worldbody>
 
   <actuator>
