@@ -63,8 +63,8 @@ void Bike::TransitionLocked(mjModel* model, mjData* data) {
   mju_sub(nose_to_target, target, nose, 2);
   if (mju_norm(nose_to_target, 2) < 0.08) {
     absl::BitGen gen_;
-    data->mocap_pos[0] = absl::Uniform<double>(gen_, -.8, .8);
-    data->mocap_pos[1] = absl::Uniform<double>(gen_, -.8, .8);
+    data->mocap_pos[0] = absl::Uniform<double>(gen_, -4, 4);
+    data->mocap_pos[1] = absl::Uniform<double>(gen_, -4, 4);
   }
 }
 

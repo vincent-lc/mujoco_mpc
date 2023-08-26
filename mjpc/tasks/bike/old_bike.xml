@@ -22,7 +22,7 @@
   </default>
 
   <worldbody>
-    <geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
+    <geom name="ground" type="plane" size="20 20 0.01" material="blue_grid"/>
     <body name="head" pos="0 0 .05" childclass="bike">
       <light name="light_1" diffuse=".8 .8 .8" pos="0 0 1.5"/>
       <geom name="head" type="ellipsoid" size=".02 .04 .017" pos="0 -.022 0" mass="0" material="self"/>
