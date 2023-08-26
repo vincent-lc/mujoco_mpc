@@ -37,7 +37,7 @@
 			</body>
 
 			<body pos='.55 0 0' name='handle'>
-				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-25 25' stiffness='0' armature='0' damping='0.5'/>
+				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-15 15' stiffness='0' armature='0' damping='0.1'/>
 				<geom type='capsule' size='.04 .2' pos='0 0 0.2'/>
 				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
 
