@@ -29,7 +29,7 @@
     <!-- cost -->
     <user name="Control" dim="2" user="0 0.005 0 1" />
     <user name="Distance" dim="2" user="2 1 0 10 0.04" />
-    <user name="Stand" dim="1" user="2 500 0 500 0.04" />
+    <user name="Stand" dim="1" user="2 100 0 500 0.04" />
 
     <!-- trace -->
     <framepos name="trace0" objtype="geom" objname="nose"/>
