@@ -6,7 +6,7 @@
     <!-- agent -->
     <numeric name="agent_planner" data="2" />
     <numeric name="agent_horizon" data="2" />
-    <numeric name="agent_timestep" data="0.01" />
+    <numeric name="agent_timestep" data="0.04" />
     <numeric name="agent_integrator" data="2" />
     <numeric name="agent_policy_width" data="0.0015" />
     <numeric name="sampling_spline_points" data="10" />
@@ -15,15 +15,19 @@
   </custom>
 
   <worldbody>
-    <body name="target" mocap="true" pos="1 1 .05">
-      <geom name="target" type="sphere" size="0.05" material="target"/>
+    <body name="target" mocap="true" pos="1 1 .01">
+      <geom name="target" type="cylinder" size="0.05 0.01" material="target"/>
       <light name="target_light" diffuse=".7 .7 .7" pos="0 0 0.5"/>
     </body>
   </worldbody>
 
+  <contact>
+    <exclude name="targetground" body1="ground" body2="target"/>
+  </contact>
+
   <sensor>
     <!-- cost -->
-    <user name="Control" dim="2" user="0 0.1 0 1" />
+    <user name="Control" dim="2" user="0 0.001 0 1" />
     <user name="Distance" dim="2" user="2 10 0 10 0.04" />
 
     <!-- trace -->

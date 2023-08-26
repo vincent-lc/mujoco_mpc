@@ -22,7 +22,9 @@
   </default>
 
   <worldbody>
+	<body name='ground' pos='0 0 0'>
     <geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
+	</body>
 
 		<body name='torso' pos='0 0 2.25'>
 			<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
@@ -35,7 +37,7 @@
 			</body>
 
 			<body pos='.55 0 0' name='handle'>
-				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-.5 .5' stiffness='0' armature='0' damping='0.1'/>
+				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-25 25' stiffness='0' armature='0' damping='0.5'/>
 				<geom type='capsule' size='.04 .2' pos='0 0 0.2'/>
 				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
 
