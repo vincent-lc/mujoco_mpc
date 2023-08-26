@@ -1,54 +1,81 @@
-<mujoco model="Bike">
-  <include file="../common.xml" />
-  <include file="bike.xml" />
+<mujoco model="bike">
+  <option timestep="0.01" integrator="implicit" density="1000">
+    <flag contact="disable"/>
+  </option>
 
-  <custom>
-    <!-- agent -->
-    <numeric name="agent_planner" data="2" />
-    <numeric name="agent_horizon" data="2" />
-    <numeric name="agent_timestep" data="0.01" />
-    <numeric name="agent_integrator" data="2" />
-    <numeric name="agent_policy_width" data="0.0015" />
-    <numeric name="sampling_spline_points" data="10" />
-    <numeric name="sampling_exploration" data="0.05" />
-    <numeric name="gradient_spline_points" data="10" />
-
-    <!-- estimator -->
-    <numeric name="estimator" data="0" />
-    <numeric name="estimator_sensor_start" data="2" />
-    <numeric name="estimator_number_sensor" data="8" />
-    <numeric name="estimator_timestep" data="0.0075" />
-    <numeric name="batch_configuration_length" data="5" />
-    <numeric name="batch_scale_prior" data="1.0e-8" />
-  </custom>
+  <default>
+    <default class="bike">
+      <joint type="hinge" pos="0 -.05 0" axis="0 0 1" limited="true" solreflimit=".05 .3"
+             solimplimit="0 .8 .1" armature="1e-6" range="-90 90" stiffness=".001"/>
+      <default class="inertial">
+        <geom type="box" size=".001 .05 .01" material="self" mass=".01" group="3"/>
+      </default>
+      <default class="visual">
+        <geom type="capsule" size=".01" fromto="0 -.05 0 0 .05 0" mass="0" material="self"/>
+      </default>
+      <site size=".01" rgba="0 0 0 0"/>
+    </default>
+    <default class="free">
+      <joint limited="false" stiffness="0" armature="0"/>
+    </default>
+    <general gainprm="2e-3" ctrllimited="true" ctrlrange="-1 1" dyntype="filter" dynprm="0.6"/>
+  </default>
 
   <worldbody>
-    <body name="target" mocap="true" pos="1 1 .05">
-      <geom name="target" type="sphere" size="0.05" material="target"/>
-      <light name="target_light" diffuse=".7 .7 .7" pos="0 0 0.5"/>
+    <geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
+    <body name="head" pos="0 0 .05" childclass="bike">
+      <light name="light_1" diffuse=".8 .8 .8" pos="0 0 1.5"/>
+      <geom name="head" type="ellipsoid" size=".02 .04 .017" pos="0 -.022 0" mass="0" material="self"/>
+      <geom name="nose" type="sphere" pos="0 -.06 0" size=".004" mass="0" material="effector" euler="180 0 0"/>
+      <geom name="eyes" type="capsule" fromto="-.006 -.054 .005 .006 -.054 .005" size=".004" mass="0" material="eye"/>
+      <camera name="tracking1" pos="0.0 -0.2 0.5" xyaxes="1 0 0 0 1 1" mode="trackcom" fovy="60"/>
+      <camera name="tracking2" pos="-0.9 0.5 0.15" xyaxes="0 -1 0 .3 0 1" mode="trackcom" fovy="60"/>
+      <camera name="eyes" pos="0 -.058 .005" xyaxes="-1 0 0 0 0 1"/>
+      <joint name="rootx" class="free" type="slide" axis="1 0 0" pos="0 -.05 0"/>
+      <joint name="rooty" class="free" type="slide" axis="0 1 0" pos="0 -.05 0"/>
+      <joint name="rootz" class="free" type="hinge" axis="0 0 1" pos="0 -.05 0"/>
+      <geom name="inertial" class="inertial"/>
+      <geom name="visual" class="visual"/>
+      <site name="head"/>
+      <body name="segment_0" pos="0 .1 0">
+        <geom class="visual" name="visual_0"/>
+        <geom class="inertial" name="inertial_0"/>
+        <site name="site_0"/>
+        <joint name="joint_0"/>
+        <body name="segment_1" pos="0 .1 0">
+          <geom class="visual" name="visual_1"/>
+          <geom class="inertial" name="inertial_1"/>
+          <site name="site_1"/>
+          <joint name="joint_1"/>
+          <body name="segment_2" pos="0 .1 0">
+            <geom class="visual" name="visual_2"/>
+            <geom class="inertial" name="inertial_2"/>
+            <site name="site_2"/>
+            <joint name="joint_2"/>
+            <body name="segment_3" pos="0 .1 0">
+              <geom class="visual" name="visual_3"/>
+              <geom class="inertial" name="inertial_3"/>
+              <site name="site_3"/>
+              <joint name="joint_3"/>
+              <body name="segment_4" pos="0 .1 0">
+                <geom class="visual" name="visual_4"/>
+                <geom class="inertial" name="inertial_4"/>
+                <site name="site_4"/>
+                <joint name="joint_4"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
     </body>
   </worldbody>
 
-  <sensor>
-    <!-- cost -->
-    <user name="Control" dim="5" user="0 0.1 0 1" />
-    <user name="Distance" dim="2" user="2 10 0 10 0.04" />
+  <actuator>
+    <general name="0" joint="joint_0"/>
+    <general name="1" joint="joint_1"/>
+    <general name="2" joint="joint_2"/>
+    <general name="3" joint="joint_3"/>
+    <general name="4" joint="joint_4"/>
+  </actuator>
 
-    <!-- estimator -->
-    <jointpos name="rootx" joint="rootx" />
-    <jointpos name="rooty" joint="rooty" />
-    <jointpos name="rootz" joint="rootz" />
-    <jointpos name="joint0" joint="joint_0" />
-    <jointpos name="joint1" joint="joint_1" />
-    <jointpos name="joint2" joint="joint_2" />
-    <jointpos name="joint3" joint="joint_3" />
-    <jointpos name="joint4" joint="joint_4" />
-
-    <!-- trace -->
-    <framepos name="trace0" objtype="geom" objname="nose"/>
-
-    <!-- residual -->
-    <framepos name="nose" objtype="geom" objname="nose"/>
-    <framepos name="target" objtype="body" objname="target"/>
-  </sensor>
 </mujoco>
