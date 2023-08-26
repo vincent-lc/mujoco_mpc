@@ -36,7 +36,49 @@
 					<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
 					<geom name='b_decoration1' type='box'   size='0.15 0.052 0.02' contype='0' conaffinity='0' density='0'/>
 					<geom name='b_decoration2' type='box'   size='0.02 0.052 0.15' contype='0' conaffinity='0' density='0'/>
-					<geom name='b_sphere0' type='sphere' size='0.052' mass='0.1'/>
+
+
+
+
+					<geom name='b_sphere_0' type='sphere' pos='0.2 0 0.0' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_10' type='sphere' pos='0.1969615506024416 0 0.034729635533386066' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_20' type='sphere' pos='0.1879385241571817 0 0.06840402866513375' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_30' type='sphere' pos='0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_40' type='sphere' pos='0.1532088886237956 0 0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_50' type='sphere' pos='0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_60' type='sphere' pos='0.10000000000000003 0 0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_70' type='sphere' pos='0.06840402866513377 0 0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_80' type='sphere' pos='0.03472963553338609 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_90' type='sphere' pos='1.2246467991473533e-17 0 0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_100' type='sphere' pos='-0.03472963553338606 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_110' type='sphere' pos='-0.06840402866513375 0 0.1879385241571817' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_120' type='sphere' pos='-0.09999999999999996 0 0.17320508075688776' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_130' type='sphere' pos='-0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_140' type='sphere' pos='-0.15320888862379559 0 0.1285575219373079' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_150' type='sphere' pos='-0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_160' type='sphere' pos='-0.18793852415718168 0 0.06840402866513377' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_170' type='sphere' pos='-0.1969615506024416 0 0.03472963553338614' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_180' type='sphere' pos='-0.2 0 2.4492935982947065e-17' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_190' type='sphere' pos='-0.1969615506024416 0 -0.034729635533386094' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_200' type='sphere' pos='-0.1879385241571817 0 -0.06840402866513373' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_210' type='sphere' pos='-0.17320508075688773 0 -0.10000000000000003' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_220' type='sphere' pos='-0.1532088886237956 0 -0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_230' type='sphere' pos='-0.1285575219373079 0 -0.15320888862379559' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_240' type='sphere' pos='-0.10000000000000009 0 -0.17320508075688767' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_250' type='sphere' pos='-0.06840402866513388 0 -0.18793852415718165' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_260' type='sphere' pos='-0.034729635533386066 0 -0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_270' type='sphere' pos='-3.6739403974420595e-17 0 -0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_280' type='sphere' pos='0.034729635533386 0 -0.19696155060244164' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_290' type='sphere' pos='0.0684040286651338 0 -0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_300' type='sphere' pos='0.10000000000000003 0 -0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_310' type='sphere' pos='0.12855752193730785 0 -0.15320888862379564' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_320' type='sphere' pos='0.15320888862379556 0 -0.12855752193730793' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_330' type='sphere' pos='0.17320508075688767 0 -0.10000000000000009' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_340' type='sphere' pos='0.18793852415718162 0 -0.06840402866513388' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+					<geom name='b_sphere_350' type='sphere' pos='0.1969615506024416 0 -0.03472963553338608' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+
+
+
 				</body>
 
 				<body pos='.55 0 0' name='handle'>
