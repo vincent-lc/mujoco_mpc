@@ -29,8 +29,8 @@
 #include "mjpc/tasks/particle/particle.h"
 #include "mjpc/tasks/quadrotor/quadrotor.h"
 #include "mjpc/tasks/quadruped/quadruped.h"
-#include "mjpc/tasks/bike/bike.h"
 #include "mjpc/tasks/swimmer/swimmer.h"
+#include "mjpc/tasks/bike/bike.h"
 #include "mjpc/tasks/walker/walker.h"
 
 namespace mjpc {
@@ -52,6 +52,7 @@ std::vector<std::shared_ptr<Task>> GetTasks() {
     std::make_shared<QuadrupedHill>(),
     std::make_shared<Bike>(),
     std::make_shared<Swimmer>(),
+    std::make_shared<Bike>(),
     std::make_shared<Walker>(),
   };
 }
