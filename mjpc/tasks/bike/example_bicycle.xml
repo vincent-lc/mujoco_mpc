@@ -82,9 +82,9 @@ https://github.com/vikashplus/pallet
 
 	</worldbody>
 
-	<!-- <actuator>
+	<actuator>
         <motor name="b_wheel" joint="f_wheel" gear="2.5" />
         <motor name="handle" joint="handle" gear="2.5" />
-	</actuator> -->
+	</actuator>
 
 </mujoco>

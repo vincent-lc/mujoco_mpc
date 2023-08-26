@@ -31,18 +31,12 @@
 
   <sensor>
     <!-- cost -->
-    <user name="Control" dim="5" user="0 0.1 0 1" />
+    <user name="Control" dim="2" user="0 0.1 0 1" />
     <user name="Distance" dim="2" user="2 10 0 10 0.04" />
 
     <!-- estimator -->
-    <jointpos name="rootx" joint="rootx" />
-    <jointpos name="rooty" joint="rooty" />
-    <jointpos name="rootz" joint="rootz" />
     <jointpos name="joint0" joint="joint_0" />
     <jointpos name="joint1" joint="joint_1" />
-    <jointpos name="joint2" joint="joint_2" />
-    <jointpos name="joint3" joint="joint_3" />
-    <jointpos name="joint4" joint="joint_4" />
 
     <!-- trace -->
     <framepos name="trace0" objtype="geom" objname="nose"/>

@@ -1,6 +1,6 @@
 <mujoco model="bike">
   <option timestep="0.01" integrator="implicit" density="1000">
-    <flag contact="disable"/>
+    <!-- <flag contact="disable"/> -->
   </option>
 
   <default>
@@ -23,58 +23,13 @@
 
   <worldbody>
     <geom name="ground" type="plane" size="2 2 0.01" material="blue_grid"/>
-    <body name="head" pos="0 0 .05" childclass="bike">
-      <light name="light_1" diffuse=".8 .8 .8" pos="0 0 1.5"/>
-      <geom name="head" type="ellipsoid" size=".02 .04 .017" pos="0 -.022 0" mass="0" material="self"/>
-      <geom name="nose" type="sphere" pos="0 -.06 0" size=".004" mass="0" material="effector" euler="180 0 0"/>
-      <geom name="eyes" type="capsule" fromto="-.006 -.054 .005 .006 -.054 .005" size=".004" mass="0" material="eye"/>
-      <camera name="tracking1" pos="0.0 -0.2 0.5" xyaxes="1 0 0 0 1 1" mode="trackcom" fovy="60"/>
-      <camera name="tracking2" pos="-0.9 0.5 0.15" xyaxes="0 -1 0 .3 0 1" mode="trackcom" fovy="60"/>
-      <camera name="eyes" pos="0 -.058 .005" xyaxes="-1 0 0 0 0 1"/>
-      <joint name="rootx" class="free" type="slide" axis="1 0 0" pos="0 -.05 0"/>
-      <joint name="rooty" class="free" type="slide" axis="0 1 0" pos="0 -.05 0"/>
-      <joint name="rootz" class="free" type="hinge" axis="0 0 1" pos="0 -.05 0"/>
-      <geom name="inertial" class="inertial"/>
-      <geom name="visual" class="visual"/>
-      <site name="head"/>
-      <body name="segment_0" pos="0 .1 0">
-        <geom class="visual" name="visual_0"/>
-        <geom class="inertial" name="inertial_0"/>
-        <site name="site_0"/>
-        <joint name="joint_0"/>
-        <body name="segment_1" pos="0 .1 0">
-          <geom class="visual" name="visual_1"/>
-          <geom class="inertial" name="inertial_1"/>
-          <site name="site_1"/>
-          <joint name="joint_1"/>
-          <body name="segment_2" pos="0 .1 0">
-            <geom class="visual" name="visual_2"/>
-            <geom class="inertial" name="inertial_2"/>
-            <site name="site_2"/>
-            <joint name="joint_2"/>
-            <body name="segment_3" pos="0 .1 0">
-              <geom class="visual" name="visual_3"/>
-              <geom class="inertial" name="inertial_3"/>
-              <site name="site_3"/>
-              <joint name="joint_3"/>
-              <body name="segment_4" pos="0 .1 0">
-                <geom class="visual" name="visual_4"/>
-                <geom class="inertial" name="inertial_4"/>
-                <site name="site_4"/>
-                <joint name="joint_4"/>
-              </body>
-            </body>
-          </body>
-        </body>
-      </body>
-    </body>
 
 		<body name='torso' pos='0 0 2.25'>
 			<joint name='root' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
 			<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
-			<site name="root" type='sphere' size=".05" pos="0 0 0"/>
+      <geom name="nose" type="sphere" pos="0 -.06 0" size=".004" mass="0" material="effector" euler="180 0 0"/>
 			<body pos='-.3 0 0' name='l_wheel'>
-				<joint name='b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+				<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
 				<geom name='b_wheel' type='cylinder' fromto='0 -.01 0    0 0.01 0'  size='0.20' condim='6'/>
 				<geom name='b_wheel0' type='cylinder' fromto='0 -.011 0    0 0.011 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
 				<geom name='b_decoration1' type='box'   size='0.15 0.012 0.02' contype='0' conaffinity='0' density='0'/>
@@ -86,10 +41,10 @@
 
 				<joint name='handle' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-.5 .5' stiffness='0' armature='0' damping='0.1'/>
 				<geom type='capsule' size='.04 .2' pos='0 0 0.2'/>
-				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='1.57 0 0'/>
+				<geom type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
 
 				<body pos='0 0 0' name='f_wheel'>
-					<joint name='f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+					<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
 					<geom name='f_wheel' type='cylinder' fromto='0 -.01 0    0 0.01 0'  size='0.20' condim='6'/>
 					<geom name='f_wheel0' type='cylinder' fromto='0 -.011 0    0 0.011 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
 					<geom name='f_decoration1' type='box'   size='0.15 0.012 0.02' contype='0' conaffinity='0' density='0'/>
@@ -106,9 +61,6 @@
   <actuator>
     <general name="0" joint="joint_0"/>
     <general name="1" joint="joint_1"/>
-    <general name="2" joint="joint_2"/>
-    <general name="3" joint="joint_3"/>
-    <general name="4" joint="joint_4"/>
-  </actuator>
+	</actuator>
 
 </mujoco>
