@@ -29,6 +29,7 @@
 #include "mjpc/tasks/particle/particle.h"
 #include "mjpc/tasks/quadrotor/quadrotor.h"
 #include "mjpc/tasks/quadruped/quadruped.h"
+#include "mjpc/tasks/bike/bike.h"
 #include "mjpc/tasks/swimmer/swimmer.h"
 #include "mjpc/tasks/walker/walker.h"
 
