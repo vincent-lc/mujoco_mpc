@@ -31,7 +31,7 @@
 				<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
 				<geom name="nose" type="sphere" pos="1.0 0 0" size=".01" mass="0" material="effector" euler="0 0 0"/>
 				<body pos='-.3 0 0' name='l_wheel'>
-					<joint name='b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+					<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
 					<geom name='b_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
 					<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
 				</body>
@@ -42,7 +42,7 @@
 					<geom name="top_handle" type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
 
 					<body pos='0 0 0' name='f_wheel'>
-						<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+						<joint name='f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
 						<geom name='f_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6'/>
 						<geom name='f_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
 					</body>
@@ -51,7 +51,7 @@
 	</worldbody>
 
 	<actuator>
-		<motor name="0" joint="joint_0" gear="50"/>
+		<motor name="0" joint="joint_0" gear="10"/>
 		<motor name="1" joint="joint_1" gear="25"/>
 	</actuator>
 
