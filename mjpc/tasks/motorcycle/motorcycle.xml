@@ -1,142 +1,53 @@
 <mujoco model="motorcycle">
-  <option timestep="0.01" integrator="implicit" density="1000">
-    <!-- <flag contact="disable"/> -->
-  </option>
-
-  <default>
-    <default class="motorcycle">
-      <joint type="hinge" pos="0 -.05 0" axis="0 0 1" limited="true" solreflimit=".05 .3"
-             solimplimit="0 .8 .1" armature="1e-6" range="-90 90" stiffness=".001"/>
-      <default class="inertial">
-        <geom type="box" size=".001 .05 .01" material="self" mass=".01" group="3"/>
-      </default>
-      <default class="visual">
-        <geom type="capsule" size=".01" fromto="0 -.05 0 0 .05 0" mass="0" material="self"/>
-      </default>
-      <site size=".01" rgba="0 0 0 0"/>
-    </default>
-    <default class="free">
-      <joint limited="false" stiffness="0" armature="0"/>
-    </default>
-    <general gainprm="2e-3" ctrllimited="true" ctrlrange="-1 1" dyntype="filter" dynprm="0.6"/>
-  </default>
+	<option timestep="0.01" integrator="implicit" density="1000">
+    	<!-- <flag contact="disable"/> -->
+  	</option>
 
 	<worldbody>
 		<body name='ground' pos='0 0 0'>
 			<geom name="ground" type="plane" size="20 20 0.01" material="blue_grid"/>
 		</body>
-			<body name='frame' pos='0 0 0'>
-				<geom name="nose" type="sphere" pos="1.0 0 0" size=".01" mass="0" material="effector" euler="0 0 0"/>
+		<body name='frame' pos='0 0 0'>
+			<geom name="nose" type="sphere" size=".01" pos="1.0 0 0" mass="0.1" euler="0 0 0"/>
+			<geom name="top_b_frame" type='capsule' size='.04 .7163' pos='0 0 0.4' euler='0 19 0'/>
+			<geom name="bottom_b_frame" type='capsule' size='.04 .7946' pos='0 0 0.4' euler='0 40 0'/>
+			<geom name="top_f_frame" type='capsule' size='.04 .5597' pos='0 0 0.4' euler='0 30 0'/>
+			<geom name="bottom_f_frame" type='capsule' size='.04 .3825' pos='0 0 0.4' euler='0 65 0'/>
+			<geom name="motor_u" type='capsule' size='.04 .3394' pos='0 0 0.4' euler='0 12 0'/>
+			<geom name="motor_d" type='capsule' size='.04 .2773' pos='0 0 0.4' euler='0 27 0'/>
+			<geom name="motor_l" type='capsule' size='.04 .2844' pos='0 0 0.4' euler='0 78 0'/>
+			<geom name="motor_r" type='capsule' size='.04 .3466' pos='0 0 0.4' euler='0 67 0'/>
+		</body>
 
-				<geom name="top_b_frame" type='capsule' size='.04 .7163' pos='0 0 0.4' euler='0 19 0'/>
-				<geom name="bottom_b_frame" type='capsule' size='.04 .7946' pos='0 0 0.4' euler='0 40 0'/>
-				<geom name="top_f_frame" type='capsule' size='.04 .5597' pos='0 0 0.4' euler='0 30 0'/>
-				<geom name="bottom_f_frame" type='capsule' size='.04 .3825' pos='0 0 0.4' euler='0 65 0'/>
-				<geom name="motor_u" type='capsule' size='.04 .3394' pos='0 0 0.4' euler='0 12 0'/>
-				<geom name="motor_d" type='capsule' size='.04 .2773' pos='0 0 0.4' euler='0 27 0'/>
-				<geom name="motor_l" type='capsule' size='.04 .2844' pos='0 0 0.4' euler='0 78 0'/>
-				<geom name="motor_r" type='capsule' size='.04 .3466' pos='0 0 0.4' euler='0 67 0'/>
-			</body>
+		<body name="steering" pos='0 0 0'>
+			<geom name="fork" type='capsule' size='.04 .7357' pos='0 0 0.4' euler='0 65 0'/>
+			<geom name="handle_support" type='capsule' size='.04 .152.1' pos='0 0 0.4' euler='0 45 0'/>
+			<geom name="handlebar" type='capsule' size='.04 .5' pos='0 0 0.4' euler='90 0 0'/>
+			<joint name='joint_steering' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-30 30' stiffness='0' armature='0' damping='0.1'/>
+			<joint name='joint_fork' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
+		</body>
 
-			<body name="steering" pos='0 0 0'>
-				<geom name="fork" type='capsule' size='.04 .7357' pos='0 0 0.4' euler='0 65 0'/>
-				<geom name="handle_support" type='capsule' size='.04 .152.1' pos='0 0 0.4' euler='0 45 0'/>
-				<geom name="handlebar" type='capsule' size='.04 .5' pos='0 0 0.4' euler='90 0 0'/>
-				<joint name='joint_steering' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-30 30' stiffness='0' armature='0' damping='0.1'/>
-				<joint name='joint_fork' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
-			</body>
+		<body name="f_wheel" pos='0 0 0'>
+			<geom name="f_wheel" type='cylinder' size='.1 .430' pos='0 0 0.4'/>
+			<joint name='joint_f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
+		</body>
 
-			<body name="f_wheel" pos='0 0 0'>
-				<geom name="f_wheel" type='cylinder' size='.1 .430' pos='0 0 0.4'/>
-				<joint name='joint_f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
-			</body>
+		<body name="swing_arm" pos='0 0 0'>
+			<geom name="swing_arm" type='capsule' size='.04 .624' pos='0 0 0.4' euler='0 8 0'/>
+			<geom name="swing_arm_support" type='capsule' size='.04 .1973' pos='0 0 0.4' euler='0 79 0'/>
+		</body>
 
-			<body name="swing_arm" pos='0 0 0'>
-				<geom name="swing_arm" type='capsule' size='.04 .624' pos='0 0 0.4' euler='0 8 0'/>
-				<geom name="swing_arm_support" type='capsule' size='.04 .1973' pos='0 0 0.4' euler='0 79 0'/>
-			</body>
+		<body name="rear_shock" pos='0 0 0'>
+			<geom name="rear_shock" type='capsule' size='.04 .3637' pos='0 0 0.4' euler='0 17 0'/>
+			<!-- <joint name='joint_f_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
+			<joint name='joint_b_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/> -->
+			<joint name='joint_rear_shock' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
+		</body>
 
-			<body name="rear_shock" pos='0 0 0'>
-				<geom name="rear_shock" type='capsule' size='.04 .3637' pos='0 0 0.4' euler='0 17 0'/>
-				<!-- <joint name='joint_f_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
-				<joint name='joint_b_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/> -->
-				<joint name='joint_rear_shock' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
-			</body>
-
-			<body name="b_wheel" pos='0 0 0'>
-				<geom name="b_wheel" type='cylinder' size='.15 .430' pos='0 0 0.4'/>
-				<joint name='joint_b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
-			</body>
-
-
-
-			<!-- <body name='torso' pos='0 0 0.25'>
-				<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
-				<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
-				<geom name="nose" type="sphere" pos="1.0 0 0" size=".01" mass="0" material="effector" euler="0 0 0"/>
-				<body pos='-.3 0 0' name='l_wheel'>
-					<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
-					<geom name='b_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6' friction='0.7 0.01 0.001'/>
-					<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
-					<geom name='b_decoration1' type='box'   size='0.15 0.052 0.02' contype='0' conaffinity='0' density='0'/>
-					<geom name='b_decoration2' type='box'   size='0.02 0.052 0.15' contype='0' conaffinity='0' density='0'/>
-
-
-
-
-					<geom name='b_sphere_0' type='sphere' pos='0.2 0 0.0' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_10' type='sphere' pos='0.1969615506024416 0 0.034729635533386066' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_20' type='sphere' pos='0.1879385241571817 0 0.06840402866513375' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_30' type='sphere' pos='0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_40' type='sphere' pos='0.1532088886237956 0 0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_50' type='sphere' pos='0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_60' type='sphere' pos='0.10000000000000003 0 0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_70' type='sphere' pos='0.06840402866513377 0 0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_80' type='sphere' pos='0.03472963553338609 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_90' type='sphere' pos='1.2246467991473533e-17 0 0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_100' type='sphere' pos='-0.03472963553338606 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_110' type='sphere' pos='-0.06840402866513375 0 0.1879385241571817' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_120' type='sphere' pos='-0.09999999999999996 0 0.17320508075688776' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_130' type='sphere' pos='-0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_140' type='sphere' pos='-0.15320888862379559 0 0.1285575219373079' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_150' type='sphere' pos='-0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_160' type='sphere' pos='-0.18793852415718168 0 0.06840402866513377' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_170' type='sphere' pos='-0.1969615506024416 0 0.03472963553338614' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_180' type='sphere' pos='-0.2 0 2.4492935982947065e-17' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_190' type='sphere' pos='-0.1969615506024416 0 -0.034729635533386094' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_200' type='sphere' pos='-0.1879385241571817 0 -0.06840402866513373' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_210' type='sphere' pos='-0.17320508075688773 0 -0.10000000000000003' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_220' type='sphere' pos='-0.1532088886237956 0 -0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_230' type='sphere' pos='-0.1285575219373079 0 -0.15320888862379559' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_240' type='sphere' pos='-0.10000000000000009 0 -0.17320508075688767' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_250' type='sphere' pos='-0.06840402866513388 0 -0.18793852415718165' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_260' type='sphere' pos='-0.034729635533386066 0 -0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_270' type='sphere' pos='-3.6739403974420595e-17 0 -0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_280' type='sphere' pos='0.034729635533386 0 -0.19696155060244164' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_290' type='sphere' pos='0.0684040286651338 0 -0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_300' type='sphere' pos='0.10000000000000003 0 -0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_310' type='sphere' pos='0.12855752193730785 0 -0.15320888862379564' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_320' type='sphere' pos='0.15320888862379556 0 -0.12855752193730793' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_330' type='sphere' pos='0.17320508075688767 0 -0.10000000000000009' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_340' type='sphere' pos='0.18793852415718162 0 -0.06840402866513388' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-					<geom name='b_sphere_350' type='sphere' pos='0.1969615506024416 0 -0.03472963553338608' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
-
-
-
-				</body>
-
-				<body pos='.55 0 0' name='handle'>
-					<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-45 45' stiffness='0' armature='0' damping='5.0'/>
-					<geom name="bottom_handle" type='capsule' size='.04 .2' pos='0 0 0.2'/>
-					<geom name="top_handle" type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
-
-					<body pos='0 0 0' name='f_wheel'>
-						<joint name='f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
-						<geom name='f_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6' friction="0.7 0.01 0.001"/>
-						<geom name='f_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
-					</body>
-				</body>
-			</body> -->
+		<body name="b_wheel" pos='0 0 0'>
+			<geom name="b_wheel" type='cylinder' size='.15 .430' pos='0 0 0.4'/>
+			<joint name='joint_b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
+		</body>
 	</worldbody>
 
 	<actuator>
@@ -145,3 +56,94 @@
 	</actuator>
 
 </mujoco>
+
+
+
+
+
+<!-- <body name='torso' pos='0 0 0.25'>
+	<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
+	<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
+	<geom name="nose" type="sphere" pos="1.0 0 0" size=".01" mass="0" material="effector" euler="0 0 0"/>
+	<body pos='-.3 0 0' name='l_wheel'>
+		<joint name='joint_1' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+		<geom name='b_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6' friction='0.7 0.01 0.001'/>
+		<geom name='b_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+		<geom name='b_decoration1' type='box'   size='0.15 0.052 0.02' contype='0' conaffinity='0' density='0'/>
+		<geom name='b_decoration2' type='box'   size='0.02 0.052 0.15' contype='0' conaffinity='0' density='0'/>
+
+
+
+
+		<geom name='b_sphere_0' type='sphere' pos='0.2 0 0.0' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_10' type='sphere' pos='0.1969615506024416 0 0.034729635533386066' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_20' type='sphere' pos='0.1879385241571817 0 0.06840402866513375' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_30' type='sphere' pos='0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_40' type='sphere' pos='0.1532088886237956 0 0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_50' type='sphere' pos='0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_60' type='sphere' pos='0.10000000000000003 0 0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_70' type='sphere' pos='0.06840402866513377 0 0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_80' type='sphere' pos='0.03472963553338609 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_90' type='sphere' pos='1.2246467991473533e-17 0 0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_100' type='sphere' pos='-0.03472963553338606 0 0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_110' type='sphere' pos='-0.06840402866513375 0 0.1879385241571817' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_120' type='sphere' pos='-0.09999999999999996 0 0.17320508075688776' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_130' type='sphere' pos='-0.12855752193730788 0 0.1532088886237956' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_140' type='sphere' pos='-0.15320888862379559 0 0.1285575219373079' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_150' type='sphere' pos='-0.17320508075688776 0 0.09999999999999999' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_160' type='sphere' pos='-0.18793852415718168 0 0.06840402866513377' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_170' type='sphere' pos='-0.1969615506024416 0 0.03472963553338614' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_180' type='sphere' pos='-0.2 0 2.4492935982947065e-17' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_190' type='sphere' pos='-0.1969615506024416 0 -0.034729635533386094' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_200' type='sphere' pos='-0.1879385241571817 0 -0.06840402866513373' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_210' type='sphere' pos='-0.17320508075688773 0 -0.10000000000000003' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_220' type='sphere' pos='-0.1532088886237956 0 -0.12855752193730785' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_230' type='sphere' pos='-0.1285575219373079 0 -0.15320888862379559' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_240' type='sphere' pos='-0.10000000000000009 0 -0.17320508075688767' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_250' type='sphere' pos='-0.06840402866513388 0 -0.18793852415718165' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_260' type='sphere' pos='-0.034729635533386066 0 -0.1969615506024416' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_270' type='sphere' pos='-3.6739403974420595e-17 0 -0.2' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_280' type='sphere' pos='0.034729635533386 0 -0.19696155060244164' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_290' type='sphere' pos='0.0684040286651338 0 -0.18793852415718168' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_300' type='sphere' pos='0.10000000000000003 0 -0.17320508075688773' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_310' type='sphere' pos='0.12855752193730785 0 -0.15320888862379564' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_320' type='sphere' pos='0.15320888862379556 0 -0.12855752193730793' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_330' type='sphere' pos='0.17320508075688767 0 -0.10000000000000009' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_340' type='sphere' pos='0.18793852415718162 0 -0.06840402866513388' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+		<geom name='b_sphere_350' type='sphere' pos='0.1969615506024416 0 -0.03472963553338608' quat='1 0 0 0' material='grey_grid' size='0.05' mass='0.1'/>
+
+
+
+	</body>
+
+	<body pos='.55 0 0' name='handle'>
+		<joint name='joint_0' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-45 45' stiffness='0' armature='0' damping='5.0'/>
+		<geom name="bottom_handle" type='capsule' size='.04 .2' pos='0 0 0.2'/>
+		<geom name="top_handle" type='capsule' size='.04 .2' pos='0 0 0.4' euler='90 0 0'/>
+
+		<body pos='0 0 0' name='f_wheel'>
+			<joint name='f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0.1'/>
+			<geom name='f_wheel' type='cylinder' fromto='0 -.05 0    0 0.05 0'  size='0.20' condim='6' friction="0.7 0.01 0.001"/>
+			<geom name='f_wheel0' type='cylinder' fromto='0 -.051 0    0 0.051 0'  size='0.15' rgba='0 0 0 1' contype='0' conaffinity='0' density='0'/>
+		</body>
+	</body>
+</body> -->
+
+
+  <!-- <default>
+    <default class="motorcycle">
+      <joint type="hinge" pos="0 -.05 0" axis="0 0 1" limited="true" solreflimit=".05 .3"
+             solimplimit="0 .8 .1" armature="1e-6" range="-90 90" stiffness=".001"/>
+      <default class="inertial">
+        <geom type="box" size=".001 .05 .01" material="self" mass=".01" group="3"/>
+      </default>
+      <!-- <default class="visual">
+        <geom type="capsule" size=".01" fromto="0 -.05 0 0 .05 0" mass="0" material="self"/>
+      </default> -->
+      <site size=".01" rgba="0 0 0 0"/>
+    </default>
+    <default class="free">
+      <joint limited="false" stiffness="0" armature="0"/>
+    </default>
+    <general gainprm="2e-3" ctrllimited="true" ctrlrange="-1 1" dyntype="filter" dynprm="0.6"/>
+  </default> -->
