@@ -1,6 +1,5 @@
 <mujoco model="motorcycle">
 	<option timestep="0.01" integrator="implicit" density="1000">
-    	<!-- <flag contact="disable"/> -->
   	</option>
 
 	<worldbody>
@@ -8,6 +7,7 @@
 			<geom name="ground" type="plane" size="20 20 0.01" material="blue_grid"/>
 		</body>
 		<body name='frame' pos='0 0 0'>
+			<joint name='free' type='free' pos='0 0 0' limited='false' damping='1' armature='0'/>
 			<geom name="nose" type="sphere" size=".01" pos="1.0 0 0" mass="0.1" euler="0 0 0"/>
 			<geom name="top_b_frame" type='capsule' size='.04 .7163' pos='0 0 0.4' euler='0 19 0'/>
 			<geom name="bottom_b_frame" type='capsule' size='.04 .7946' pos='0 0 0.4' euler='0 40 0'/>
@@ -17,52 +17,52 @@
 			<geom name="motor_d" type='capsule' size='.04 .2773' pos='0 0 0.4' euler='0 27 0'/>
 			<geom name="motor_l" type='capsule' size='.04 .2844' pos='0 0 0.4' euler='0 78 0'/>
 			<geom name="motor_r" type='capsule' size='.04 .3466' pos='0 0 0.4' euler='0 67 0'/>
-		</body>
 
-		<body name="steering" pos='0 0 0'>
-			<geom name="fork" type='capsule' size='.04 .7357' pos='0 0 0.4' euler='0 65 0'/>
-			<geom name="handle_support" type='capsule' size='.04 .152.1' pos='0 0 0.4' euler='0 45 0'/>
-			<geom name="handlebar" type='capsule' size='.04 .5' pos='0 0 0.4' euler='90 0 0'/>
-			<joint name='joint_steering' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-30 30' stiffness='0' armature='0' damping='0.1'/>
-			<joint name='joint_fork' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
-		</body>
+			<body name="steering" pos='0 0 0'>
+				<joint name='joint_steering' type='hinge' pos='0 0 0' axis='0 0 1' limited='true' range='-30 30' stiffness='0' armature='0' damping='0.1'/>
+				<geom name="top_fork" type='capsule' size='.04 .7357' pos='0 0 0.4' euler='0 65 0'/>
+				<geom name="handle_support" type='capsule' size='.04 .152' pos='0 0 0.4' euler='0 45 0'/>
+				<geom name="handlebar" type='capsule' size='.04 .5' pos='0 0 0.4' euler='90 0 0'/>
+				<body name="bottom_fork" pos='0 0 0'>
+					<joint name='joint_fork' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
+					<geom name="bottom_fork" type='capsule' size='.04 .40' pos='0 0 0.4' euler='0 65 0'/>
+					<body name="f_wheel" pos='0 0 0'>
+						<joint name='joint_f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='1'/>
+						<geom name="f_wheel" type='cylinder' size='.1 .430' pos='0 0 0.4'/>
+					</body>
+				</body>
+			</body>
 
-		<body name="f_wheel" pos='0 0 0'>
-			<geom name="f_wheel" type='cylinder' size='.1 .430' pos='0 0 0.4'/>
-			<joint name='joint_f_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
-		</body>
-
-		<body name="swing_arm" pos='0 0 0'>
-			<geom name="swing_arm" type='capsule' size='.04 .624' pos='0 0 0.4' euler='0 8 0'/>
-			<geom name="swing_arm_support" type='capsule' size='.04 .1973' pos='0 0 0.4' euler='0 79 0'/>
-		</body>
-
-		<body name="rear_shock" pos='0 0 0'>
-			<geom name="rear_shock" type='capsule' size='.04 .3637' pos='0 0 0.4' euler='0 17 0'/>
-			<!-- <joint name='joint_f_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
-			<joint name='joint_b_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/> -->
-			<joint name='joint_rear_shock' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/>
-		</body>
-
-		<body name="b_wheel" pos='0 0 0'>
-			<geom name="b_wheel" type='cylinder' size='.15 .430' pos='0 0 0.4'/>
-			<joint name='joint_b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='0'/>
+			<body name="swing_arm" pos='0 0 0'>
+				<joint name='joint_swing_arm' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='1' armature='0' damping='1'/>
+				<geom name="swing_arm" type='capsule' size='.04 .624' pos='0 0 0.4' euler='0 8 0'/>
+				<geom name="swing_arm_support" type='capsule' size='.04 .1973' pos='0 0 0.4' euler='0 79 0'/>
+				<body name="b_wheel" pos='0 0 0'>
+					<joint name='joint_b_wheel' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='1'/>
+					<geom name="b_wheel" type='cylinder' size='.15 .430' pos='0 0 0.4'/>
+				</body>
+			</body>
 		</body>
 	</worldbody>
 
 	<actuator>
-		<motor name="0" joint="joint_0" gear="10"/>
-		<motor name="1" joint="joint_1" gear="25"/>
+		<motor name="0" joint="joint_steering" gear="10"/>
+		<motor name="1" joint="joint_b_wheel" gear="25"/>
 	</actuator>
 
 </mujoco>
 
 
 
-
+<!-- <body name="rear_shock" pos='0 0 0'> -->
+	<!-- <geom name="rear_shock" type='capsule' size='.04 .3637' pos='0 0 0.4' euler='0 17 0'/> -->
+	<!-- <joint name='joint_f_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='1'/> -->
+	<!-- <joint name='joint_b_rear_shock' type='hinge' pos='0 0 0' axis='0 1 0' limited='false' stiffness='0' armature='0' damping='1'/> -->
+	<!-- <joint name='joint_rear_shock' type='slide' pos='0 0 0' axis='0 1 0' limited='true' range='-0.15 0' stiffness='1' armature='0' damping='1'/> -->
+<!-- </body> -->
 
 <!-- <body name='torso' pos='0 0 0.25'>
-	<joint name='free' type='free' pos='0 0 0' limited='false' damping='0' armature='0'/>
+	<joint name='free' type='free' pos='0 0 0' limited='false' damping='1' armature='0'/>
 	<geom type='box' size='.30 .15 .02' pos='0 0 0' mass='10'/>
 	<geom name="nose" type="sphere" pos="1.0 0 0" size=".01" mass="0" material="effector" euler="0 0 0"/>
 	<body pos='-.3 0 0' name='l_wheel'>

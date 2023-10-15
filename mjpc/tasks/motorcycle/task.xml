@@ -37,6 +37,6 @@
     <!-- residual -->
     <framepos name="nose" objtype="geom" objname="nose"/>
     <framepos name="target" objtype="body" objname="target"/>
-    <framepos name="handle" objtype="geom" objname="top_handle"/>
+    <framepos name="handle" objtype="geom" objname="handlebar"/>
   </sensor>
 </mujoco>
