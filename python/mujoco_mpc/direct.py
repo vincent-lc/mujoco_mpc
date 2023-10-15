@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Python interface for interface with Batch."""
+"""Python interface for interface with Direct."""
 
 import atexit
 import os
@@ -30,8 +30,8 @@ import numpy as np
 from numpy import typing as npt
 
 # INTERNAL IMPORT
-from mujoco_mpc.proto import batch_pb2
-from mujoco_mpc.proto import batch_pb2_grpc
+from mujoco_mpc.proto import direct_pb2
+from mujoco_mpc.proto import direct_pb2_grpc
 
 
 def find_free_port() -> int:
@@ -49,8 +49,8 @@ def find_free_port() -> int:
     return s.getsockname()[1]
 
 
-class Batch:
-  """`Batch` class to interface with MuJoCo MPC batch estimator.
+class Direct:
+  """`Direct` class to interface with MuJoCo MPC direct estimator.
 
   Attributes:
     port:
@@ -69,7 +69,7 @@ class Batch:
   ):
     # server
     if server_binary_path is None:
-      binary_name = "batch_server"
+      binary_name = "direct_server"
       server_binary_path = pathlib.Path(__file__).parent / "mjpc" / binary_name
     self._colab_logging = colab_logging
     self.port = find_free_port()
@@ -77,7 +77,7 @@ class Batch:
         [str(server_binary_path), f"--mjpc_port={self.port}"],
         stdout=subprocess.PIPE if colab_logging else None,
     )
-    # os.set_blocking(self.server_process.stdout.fileno(), False)
+    os.set_blocking(self.server_process.stdout.fileno(), False)
     atexit.register(self.server_process.kill)
 
     credentials = grpc.local_channel_credentials(
@@ -85,7 +85,7 @@ class Batch:
     )
     self.channel = grpc.secure_channel(f"localhost:{self.port}", credentials)
     grpc.channel_ready_future(self.channel).result(timeout=10)
-    self.stub = batch_pb2_grpc.BatchStub(self.channel)
+    self.stub = direct_pb2_grpc.DirectStub(self.channel)
 
     # initialize
     self.init(
@@ -105,7 +105,7 @@ class Batch:
       configuration_length: int,
       send_as: Literal["mjb", "xml"] = "xml",
   ):
-    """Initialize the batch estimator estimation horizon with `configuration_length`.
+    """Initialize the direct estimator estimation horizon with `configuration_length`.
 
     Args:
       model: optional `MjModel` instance, which, if provided, will be used as
@@ -131,14 +131,14 @@ class Batch:
 
     if model is not None:
       if send_as == "mjb":
-        model_message = batch_pb2.MjModel(mjb=model_to_mjb(model))
+        model_message = direct_pb2.MjModel(mjb=model_to_mjb(model))
       else:
-        model_message = batch_pb2.MjModel(xml=model_to_xml(model))
+        model_message = direct_pb2.MjModel(xml=model_to_xml(model))
     else:
       model_message = None
 
     # initialize request
-    init_request = batch_pb2.InitRequest(
+    init_request = direct_pb2.InitRequest(
         model=model_message,
         configuration_length=configuration_length,
     )
@@ -160,9 +160,11 @@ class Batch:
       sensor_mask: Optional[npt.ArrayLike] = [],
       force_measurement: Optional[npt.ArrayLike] = [],
       force_prediction: Optional[npt.ArrayLike] = [],
+      parameters: Optional[npt.ArrayLike] = [],
+      parameters_previous: Optional[npt.ArrayLike] = [],
   ) -> dict[str, np.ndarray]:
     # assemble inputs
-    inputs = batch_pb2.Data(
+    inputs = direct_pb2.Data(
         configuration=configuration,
         velocity=velocity,
         acceleration=acceleration,
@@ -174,10 +176,12 @@ class Batch:
         sensor_mask=sensor_mask,
         force_measurement=force_measurement,
         force_prediction=force_prediction,
+        parameters=parameters,
+        parameters_previous=parameters_previous,
     )
 
     # data request
-    request = batch_pb2.DataRequest(data=inputs, index=index)
+    request = direct_pb2.DataRequest(data=inputs, index=index)
 
     # data response
     data = self._wait(self.stub.Data.future(request)).data
@@ -195,12 +199,13 @@ class Batch:
         "sensor_mask": np.array(data.sensor_mask),
         "force_measurement": np.array(data.force_measurement),
         "force_prediction": np.array(data.force_prediction),
+        "parameters": np.array(data.parameters),
+        "parameters_previous": np.array(data.parameters_previous),
     }
 
   def settings(
       self,
       configuration_length: Optional[int] = None,
-      prior_flag: Optional[bool] = None,
       sensor_flag: Optional[bool] = None,
       force_flag: Optional[bool] = None,
       max_search_iterations: Optional[int] = None,
@@ -209,7 +214,6 @@ class Batch:
       verbose_iteration: Optional[bool] = None,
       verbose_optimize: Optional[bool] = None,
       verbose_cost: Optional[bool] = None,
-      verbose_prior: Optional[bool] = None,
       search_type: Optional[int] = None,
       step_scaling: Optional[float] = None,
       regularization_initial: Optional[float] = None,
@@ -218,16 +222,17 @@ class Batch:
       time_scaling_sensor: Optional[bool] = None,
       search_direction_tolerance: Optional[float] = None,
       cost_tolerance: Optional[float] = None,
-      assemble_prior_jacobian: Optional[bool] = None,
       assemble_sensor_jacobian: Optional[bool] = None,
       assemble_force_jacobian: Optional[bool] = None,
       assemble_sensor_norm_hessian: Optional[bool] = None,
       assemble_force_norm_hessian: Optional[bool] = None,
+      first_step_position_sensors: Optional[bool] = None,
+      last_step_position_sensors: Optional[bool] = None,
+      last_step_velocity_sensors: Optional[bool] = None,
   ) -> dict[str, int | bool]:
     # assemble settings
-    inputs = batch_pb2.Settings(
+    inputs = direct_pb2.Settings(
         configuration_length=configuration_length,
-        prior_flag=prior_flag,
         sensor_flag=sensor_flag,
         force_flag=force_flag,
         max_search_iterations=max_search_iterations,
@@ -236,7 +241,6 @@ class Batch:
         verbose_iteration=verbose_iteration,
         verbose_optimize=verbose_optimize,
         verbose_cost=verbose_cost,
-        verbose_prior=verbose_prior,
         search_type=search_type,
         step_scaling=step_scaling,
         regularization_initial=regularization_initial,
@@ -245,15 +249,17 @@ class Batch:
         time_scaling_sensor=time_scaling_sensor,
         search_direction_tolerance=search_direction_tolerance,
         cost_tolerance=cost_tolerance,
-        assemble_prior_jacobian=assemble_prior_jacobian,
         assemble_sensor_jacobian=assemble_sensor_jacobian,
         assemble_force_jacobian=assemble_force_jacobian,
         assemble_sensor_norm_hessian=assemble_sensor_norm_hessian,
         assemble_force_norm_hessian=assemble_force_norm_hessian,
+        first_step_position_sensors=first_step_position_sensors,
+        last_step_position_sensors=last_step_position_sensors,
+        last_step_velocity_sensors=last_step_velocity_sensors,
     )
 
     # settings request
-    request = batch_pb2.SettingsRequest(
+    request = direct_pb2.SettingsRequest(
         settings=inputs,
     )
 
@@ -263,7 +269,6 @@ class Batch:
     # return all settings
     return {
         "configuration_length": settings.configuration_length,
-        "prior_flag": settings.prior_flag,
         "sensor_flag": settings.sensor_flag,
         "force_flag": settings.force_flag,
         "max_search_iterations": settings.max_search_iterations,
@@ -272,7 +277,6 @@ class Batch:
         "verbose_iteration": settings.verbose_iteration,
         "verbose_optimize": settings.verbose_optimize,
         "verbose_cost": settings.verbose_cost,
-        "verbose_prior": settings.verbose_prior,
         "search_type": settings.search_type,
         "step_scaling": settings.step_scaling,
         "regularization_initial": settings.regularization_initial,
@@ -281,26 +285,30 @@ class Batch:
         "time_scaling_sensor": settings.time_scaling_sensor,
         "search_direction_tolerance": settings.search_direction_tolerance,
         "cost_tolerance": settings.cost_tolerance,
-        "assemble_prior_jacobian": settings.assemble_prior_jacobian,
         "assemble_sensor_jacobian": settings.assemble_sensor_jacobian,
         "assemble_force_jacobian": settings.assemble_force_jacobian,
         "assemble_sensor_norm_hessian": settings.assemble_sensor_norm_hessian,
         "assemble_force_norm_hessian": settings.assemble_force_norm_hessian,
+        "first_step_position_sensors": settings.first_step_position_sensors,
+        "last_step_position_sensors": settings.last_step_position_sensors,
+        "last_step_velocity_sensors": settings.last_step_velocity_sensors,
     }
 
   def noise(
       self,
       process: Optional[npt.ArrayLike] = [],
       sensor: Optional[npt.ArrayLike] = [],
-  ) -> dict[str, float | np.ndarray]:
+      parameter: Optional[npt.ArrayLike] = [],
+  ) -> dict[str, np.ndarray]:
     # assemble input noise
-    inputs = batch_pb2.Noise(
+    inputs = direct_pb2.Noise(
         process=process,
         sensor=sensor,
+        parameter=parameter,
     )
 
     # noise request
-    request = batch_pb2.NoiseRequest(noise=inputs)
+    request = direct_pb2.NoiseRequest(noise=inputs)
 
     # noise response
     noise = self._wait(self.stub.Noise.future(request)).noise
@@ -309,29 +317,7 @@ class Batch:
     return {
         "process": np.array(noise.process),
         "sensor": np.array(noise.sensor),
-    }
-
-  def norm(
-      self,
-      sensor_type: Optional[npt.ArrayLike] = [],
-      sensor_parameters: Optional[npt.ArrayLike] = [],
-  ) -> dict[str, np.ndarray]:
-    # assemble input norm data
-    inputs = batch_pb2.Norm(
-        sensor_type=sensor_type,
-        sensor_parameters=sensor_parameters,
-    )
-
-    # norm request
-    request = batch_pb2.NormRequest(norm=inputs)
-
-    # norm response
-    norm = self._wait(self.stub.Norms.future(request)).norm
-
-    # return all norm data
-    return {
-        "sensor_type": norm.sensor_type,
-        "sensor_parameters": np.array(norm.sensor_parameters),
+        "parameter": np.array(noise.parameter),
     }
 
   def cost(
@@ -340,7 +326,7 @@ class Batch:
       internals: Optional[bool] = False,
   ) -> dict[str, float | np.ndarray | int | list]:
     # cost request
-    request = batch_pb2.CostRequest(
+    request = direct_pb2.CostRequest(
         derivatives=derivatives, internals=internals
     )
 
@@ -350,22 +336,16 @@ class Batch:
     # return all costs
     return {
         "total": cost.total,
-        "prior": cost.prior,
         "sensor": cost.sensor,
         "force": cost.force,
+        "parameters": cost.parameter,
         "initial": cost.initial,
         "gradient": np.array(cost.gradient) if derivatives else [],
         "hessian": np.array(cost.hessian).reshape(cost.nvar, cost.nvar)
         if derivatives
         else [],
-        "residual_prior": np.array(cost.residual_prior) if internals else [],
         "residual_sensor": np.array(cost.residual_sensor) if internals else [],
         "residual_force": np.array(cost.residual_force) if internals else [],
-        "jacobian_prior": np.array(cost.jacobian_prior).reshape(
-            cost.nvar, cost.nvar
-        )
-        if internals
-        else [],
         "jacobian_sensor": np.array(cost.jacobian_sensor).reshape(
             cost.nsensor, cost.nvar
         )
@@ -380,11 +360,6 @@ class Batch:
         if internals
         else [],
         "norm_gradient_force": np.array(cost.norm_gradient_force)
-        if internals
-        else [],
-        "prior_matrix": np.array(cost.prior_matrix).reshape(
-            cost.nvar, cost.nvar
-        )
         if internals
         else [],
         "norm_hessian_sensor": np.array(cost.norm_hessian_sensor).reshape(
@@ -404,7 +379,7 @@ class Batch:
 
   def status(self) -> dict[str, int]:
     # status request
-    request = batch_pb2.StatusRequest()
+    request = direct_pb2.StatusRequest()
 
     # status response
     status = self._wait(self.stub.Status.future(request)).status
@@ -424,45 +399,42 @@ class Batch:
         "reduction_ratio": status.reduction_ratio,
     }
 
-  def shift(self, shift: int) -> int:
-    # shift request
-    request = batch_pb2.ShiftRequest(shift=shift)
-
-    # return head (for testing)
-    return self._wait(self.stub.Shift.future(request)).head
-
   def reset(self):
     # reset request
-    request = batch_pb2.ResetRequest()
+    request = direct_pb2.ResetRequest()
 
     # reset response
     self._wait(self.stub.Reset.future(request))
 
   def optimize(self):
     # optimize request
-    request = batch_pb2.OptimizeRequest()
+    request = direct_pb2.OptimizeRequest()
 
     # optimize response
     self._wait(self.stub.Optimize.future(request))
 
-  def prior_weights(
-      self, weights: Optional[npt.ArrayLike] = None
-  ) -> np.ndarray:
-    # prior request
-    request = batch_pb2.PriorWeightsRequest(
-        weights=weights.flatten() if weights is not None else None
-    )
+  def sensor_info(self) -> dict[str, int]:
+    # info request
+    request = direct_pb2.SensorInfoRequest()
 
-    # prior response
-    response = self._wait(self.stub.PriorWeights.future(request))
+    # info response
+    response = self._wait(self.stub.SensorInfo.future(request))
 
-    # reshape prior to (dimension, dimension)
-    mat = np.array(response.weights).reshape(
-        response.dimension, response.dimension
-    )
+    # return info
+    return {
+        "start_index": response.start_index,
+        "num_measurements": response.num_measurements,
+        "dim_measurements": response.dim_measurements,
+    }
 
-    # return prior matrix
-    return mat
+  def measurements_from_sensordata(self, data: npt.ArrayLike) -> np.ndarray:
+    # get sensor info
+    info = self.sensor_info()
+
+    # return measurements from sensor data
+    index = info["start_index"]
+    dim = info["dim_measurements"]
+    return data[index : (index + dim)]
 
   def print_cost(self):
     # get costs
@@ -470,11 +442,11 @@ class Batch:
 
     # print
     print("cost:")
-    print("  [total] = ", cost["total"])
-    print("   - prior = ", cost["prior"])
-    print("   - sensor = ", cost["sensor"])
-    print("   - force = ", cost["force"])
-    print("  (initial = ", cost["initial"], ")")
+    print("  [total]      = ", cost["total"])
+    print("     sensor    = ", cost["sensor"])
+    print("     force     = ", cost["force"])
+    print("     parameter = ", cost["parameter"])
+    print("  (initial  = ", cost["initial"], ")")
 
   def print_status(self):
     # get status
@@ -482,11 +454,11 @@ class Batch:
 
     # print
     print("status:")
-    print("- search iterations = ", status["search_iterations"])
-    print("- smoother iterations = ", status["smoother_iterations"])
-    print("- step size = ", status["step_size"])
-    print("- regularization = ", status["regularization"])
-    print("- gradient norm = ", status["gradient_norm"])
+    print("   search iterations   = ", status["search_iterations"])
+    print("   smoother iterations = ", status["smoother_iterations"])
+    print("   step size           = ", status["step_size"])
+    print("   regularization      = ", status["regularization"])
+    print("   gradient norm       = ", status["gradient_norm"])
 
     def status_code(code):
       if code == 0:
@@ -512,11 +484,11 @@ class Batch:
 
   def _wait(self, future):
     """Waits for the future to complete, while printing out subprocess stdout."""
-    # if self._colab_logging:
-    #     while True:
-    # line = self.server_process.stdout.readline()
-    # if line:
-    #     sys.stdout.write(line.decode("utf-8"))
-    # if future.done():
-    #     break
+    if self._colab_logging:
+      while True:
+        line = self.server_process.stdout.readline()
+        if line:
+          sys.stdout.write(line.decode("utf-8"))
+        if future.done():
+          break
     return future.result()

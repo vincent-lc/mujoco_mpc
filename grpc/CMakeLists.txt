@@ -52,8 +52,10 @@ unset(BUILD_SHARED_LIBS_OLD)
 
 get_filename_component(agent_service_proto "./agent.proto" ABSOLUTE)
 get_filename_component(agent_service_proto_path "${agent_service_proto}" PATH)
-get_filename_component(batch_service_proto "./batch.proto" ABSOLUTE)
-get_filename_component(batch_service_proto_path "${batch_service_proto}" PATH)
+get_filename_component(direct_service_proto "./direct.proto" ABSOLUTE)
+get_filename_component(direct_service_proto_path "${direct_service_proto}" PATH)
+get_filename_component(filter_service_proto "./filter.proto" ABSOLUTE)
+get_filename_component(filter_service_proto_path "${filter_service_proto}" PATH)
 
 # Generated sources
 set(agent_service_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/agent.pb.cc")
@@ -61,12 +63,17 @@ set(agent_service_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/agent.pb.h")
 set(agent_service_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/agent.grpc.pb.cc")
 set(agent_service_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/agent.grpc.pb.h")
 
-set(batch_service_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/batch.pb.cc")
-set(batch_service_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/batch.pb.h")
-set(batch_service_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/batch.grpc.pb.cc")
-set(batch_service_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/batch.grpc.pb.h")
+set(direct_service_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/direct.pb.cc")
+set(direct_service_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/direct.pb.h")
+set(direct_service_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/direct.grpc.pb.cc")
+set(direct_service_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/direct.grpc.pb.h")
 
-message("We need the following for agent/batch_protos:")
+set(filter_service_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/filter.pb.cc")
+set(filter_service_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/filter.pb.h")
+set(filter_service_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/filter.grpc.pb.cc")
+set(filter_service_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/filter.grpc.pb.h")
+
+message("We need the following for agent/direct_protos:")
 message(_GRPC_CPP_PLUGIN_EXECUTABLE${_GRPC_CPP_PLUGIN_EXECUTABLE})
 
 add_custom_command(
@@ -88,19 +95,36 @@ add_custom_command(
 
 add_custom_command(
   OUTPUT
-  "${batch_service_proto_srcs}"
-  "${batch_service_proto_hdrs}"
-  "${batch_service_grpc_srcs}"
-  "${batch_service_grpc_hdrs}"
+  "${direct_service_proto_srcs}"
+  "${direct_service_proto_hdrs}"
+  "${direct_service_grpc_srcs}"
+  "${direct_service_grpc_hdrs}"
   COMMAND ${_PROTOBUF_PROTOC}
   ARGS
   --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
   --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
-  -I "${batch_service_proto_path}"
+  -I "${direct_service_proto_path}"
   --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
-  "${batch_service_proto}"
+  "${direct_service_proto}"
   DEPENDS
-  "${batch_service_proto}"
+  "${direct_service_proto}"
+)
+
+add_custom_command(
+  OUTPUT
+  "${filter_service_proto_srcs}"
+  "${filter_service_proto_hdrs}"
+  "${filter_service_grpc_srcs}"
+  "${filter_service_grpc_hdrs}"
+  COMMAND ${_PROTOBUF_PROTOC}
+  ARGS
+  --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
+  --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
+  -I "${filter_service_proto_path}"
+  --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
+  "${filter_service_proto}"
+  DEPENDS
+  "${filter_service_proto}"
 )
 
 # Include generated *.pb.h files
@@ -178,19 +202,18 @@ target_compile_options(ui_agent_server PUBLIC ${AGENT_SERVICE_COMPILE_OPTIONS})
 target_link_options(ui_agent_server PRIVATE ${AGENT_SERVICE_LINK_OPTIONS})
 
 add_executable(
-  batch_server
-  batch_server.cc
-  ${batch_service_grpc_srcs}
-  ${batch_service_grpc_hdrs}
-  ${batch_service_proto_srcs}
-  ${batch_service_proto_hdrs}
-  batch_service.h
-  batch_service.cc
+  direct_server
+  direct_server.cc
+  ${direct_service_grpc_srcs}
+  ${direct_service_grpc_hdrs}
+  ${direct_service_proto_srcs}
+  ${direct_service_proto_hdrs}
+  direct_service.h
+  direct_service.cc
 )
 
 target_link_libraries(
-  batch_server
-  # batch_service_grpc_proto
+  direct_server
   absl::check
   absl::flags
   absl::flags_parse
@@ -204,7 +227,38 @@ target_link_libraries(
   mujoco::mujoco
   libmjpc
 )
-target_include_directories(batch_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
-message(BATCH_SERVICE_COMPILE_OPTIONS=${BATCH_SERVICE_COMPILE_OPTIONS})
-target_compile_options(batch_server PUBLIC ${BATCH_SERVICE_COMPILE_OPTIONS})
-target_link_options(batch_server PRIVATE ${BATCH_SERVICE_LINK_OPTIONS})
+target_include_directories(direct_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+message(DIRECT_SERVICE_COMPILE_OPTIONS=${DIRECT_SERVICE_COMPILE_OPTIONS})
+target_compile_options(direct_server PUBLIC ${DIRECT_SERVICE_COMPILE_OPTIONS})
+target_link_options(direct_server PRIVATE ${DIRECT_SERVICE_LINK_OPTIONS})
+
+add_executable(
+  filter_server
+  filter_server.cc
+  ${filter_service_grpc_srcs}
+  ${filter_service_grpc_hdrs}
+  ${filter_service_proto_srcs}
+  ${filter_service_proto_hdrs}
+  filter_service.h
+  filter_service.cc
+)
+
+target_link_libraries(
+  filter_server
+  absl::check
+  absl::flags
+  absl::flags_parse
+  absl::log
+  absl::random_random
+  absl::status
+  absl::strings
+  ${_REFLECTION}
+  ${_GRPC_GRPCPP}
+  ${_PROTOBUF_LIBPROTOBUF}
+  mujoco::mujoco
+  libmjpc
+)
+target_include_directories(filter_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+message(FILTER_SERVICE_COMPILE_OPTIONS=${FILTER_SERVICE_COMPILE_OPTIONS})
+target_compile_options(filter_server PUBLIC ${FILTER_SERVICE_COMPILE_OPTIONS})
+target_link_options(filter_server PRIVATE ${FILTER_SERVICE_LINK_OPTIONS})

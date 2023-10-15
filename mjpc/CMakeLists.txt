@@ -40,6 +40,8 @@ add_library(
   tasks/acrobot/acrobot.h
   tasks/cartpole/cartpole.cc
   tasks/cartpole/cartpole.h
+  tasks/fingers/fingers.cc
+  tasks/fingers/fingers.h
   tasks/hand/hand.cc
   tasks/hand/hand.h
   tasks/humanoid/stand/stand.cc
@@ -105,15 +107,17 @@ add_library(
   estimators/batch.cc
   estimators/batch.h
   estimators/estimator.h
-  estimators/gui.cc
-  estimators/gui.h
   estimators/include.cc
   estimators/include.h
   estimators/kalman.cc
   estimators/kalman.h
-  estimators/trajectory.h
   estimators/unscented.cc
   estimators/unscented.h
+  direct/direct.cc
+  direct/direct.h
+  direct/trajectory.h
+  direct/model_parameters.cc
+  direct/model_parameters.h
   app.cc
   app.h
   norm.cc

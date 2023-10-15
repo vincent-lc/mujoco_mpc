@@ -19,21 +19,14 @@ jobs:
               -DCMAKE_C_COMPILER:STRING=clang-14
               -DCMAKE_CXX_COMPILER:STRING=clang++-14
               -DMJPC_BUILD_GRPC_SERVICE:BOOL=ON
-            additional_targets: "agent_server"
+            additional_targets: "agent_server direct_server filter_server"
             tmpdir: "/tmp"
           - os: macos-12
             cmake_args: >-
               -G Ninja
               -DMJPC_BUILD_GRPC_SERVICE:BOOL=ON
-            additional_targets: "agent_server"
+            additional_targets: "agent_server direct_server filter_server"
             tmpdir: "/tmp"
-          - os: windows-2022
-            cmake_args: >-
-              -G Ninja
-              -DCMAKE_C_COMPILER:STRING=clang
-              -DCMAKE_CXX_COMPILER:STRING=clang++
-              -DMJPC_BUILD_GRPC_SERVICE:BOOL=ON
-            tmpdir: "C:/Temp"
 
     name: "MuJoCo MPC on ${{ matrix.os }} ${{ matrix.additional_label }}"
     runs-on: ${{ matrix.os }}
@@ -55,7 +48,12 @@ jobs:
       run: brew install ninja
     - name: Prepare Windows
       if: ${{ runner.os == 'Windows' }}
-      run: choco install nasm
+      # Install llvm 16 manually, remove after
+      # https://github.com/actions/runner-images/issues/8125 is resolved and that
+      # version is included in the image by default
+      run: >
+        choco install nasm
+        choco upgrade llvm
     - name: Configure MuJoCo MPC
       run: >
         mkdir build &&
@@ -64,7 +62,7 @@ jobs:
         ${{ matrix.cmake_args }}
     - name: Build MuJoCo MPC
       working-directory: build
-      run: cmake --build . --config=Release ${{ matrix.cmake_build_args }} --target mjpc agent_test cost_derivatives_test norm_test rollout_test threadpool_test trajectory_test utilities_test batch_force_test batch_optimize_test batch_prior_test batch_sensor_test estimator_trajectory_test estimator_utilities_test kalman_test unscented_test ${{ matrix.additional_targets }}
+      run: cmake --build . --config=Release ${{ matrix.cmake_build_args }} --target mjpc agent_test cost_derivatives_test norm_test rollout_test threadpool_test trajectory_test utilities_test direct_force_test direct_optimize_test direct_parameter_test direct_sensor_test direct_trajectory_test direct_utilities_test batch_filter_test batch_prior_test kalman_test unscented_test ${{ matrix.additional_targets }}
     - name: Test MuJoCo MPC
       working-directory: build
       run: ctest -C Release --output-on-failure .
