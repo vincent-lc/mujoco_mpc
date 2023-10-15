@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MJPC_TASKS_BIKE_BIKE_H_
-#define MJPC_TASKS_BIKE_BIKE_H_
+#ifndef MJPC_TASKS_MOTORCYCLE_MOTORCYCLE_H_
+#define MJPC_TASKS_MOTORCYCLE_MOTORCYCLE_H_
 
 #include <string>
 #include <mujoco/mujoco.h>
@@ -55,4 +55,4 @@ class Motorcycle : public ThreadSafeTask {
 };
 }  // namespace mjpc
 
-#endif  // MJPC_TASKS_BIKE_BIKE_H_
+#endif  // MJPC_TASKS_MOTORCYCLE_MOTORCYCLE_H_
