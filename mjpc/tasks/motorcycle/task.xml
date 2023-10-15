@@ -1,0 +1,42 @@
+<mujoco model="Motorcycle">
+  <include file="../common.xml" />
+  <include file="motorcycle.xml" />
+
+  <custom>
+    <!-- agent -->
+    <numeric name="agent_planner" data="2" />
+    <numeric name="agent_horizon" data="5" />
+    <numeric name="agent_timestep" data="0.04" />
+    <numeric name="agent_integrator" data="2" />
+    <numeric name="agent_policy_width" data="0.0015" />
+    <numeric name="sampling_spline_points" data="10" />
+    <numeric name="sampling_exploration" data="0.05" />
+    <numeric name="gradient_spline_points" data="10" />
+  </custom>
+
+  <worldbody>
+    <body name="target" mocap="true" pos="1 1 .005">
+      <geom name="target" type="cylinder" size="0.05 0.005" material="target"/>
+      <light name="target_light" attenuation="0 0 0" diffuse=".7 .7 .7" pos="0 0 1.5"/>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude name="targetground" body1="ground" body2="target"/>
+  </contact>
+
+  <sensor>
+    <!-- cost -->
+    <user name="Control" dim="2" user="0 0.1 0 1" />
+    <user name="Distance" dim="2" user="2 1 0 10 0.04" />
+    <user name="Stand" dim="1" user="2 100 0 500 0.04" />
+
+    <!-- trace -->
+    <framepos name="trace0" objtype="geom" objname="nose"/>
+
+    <!-- residual -->
+    <framepos name="nose" objtype="geom" objname="nose"/>
+    <framepos name="target" objtype="body" objname="target"/>
+    <framepos name="handle" objtype="geom" objname="top_handle"/>
+  </sensor>
+</mujoco>

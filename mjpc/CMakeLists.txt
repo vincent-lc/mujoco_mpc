@@ -62,6 +62,8 @@ add_library(
   tasks/quadruped/quadruped.h
   tasks/bike/bike.cc
   tasks/bike/bike.h
+  tasks/motorcycle/motorcycle.cc
+  tasks/motorcycle/motorcycle.h
   tasks/swimmer/swimmer.cc
   tasks/swimmer/swimmer.h
   tasks/walker/walker.cc
